@@ -37,6 +37,11 @@ export class ClienteService {
     return this.http.get<ICliente[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
+  AllClientePorDocumento(doc: string, req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
+    return this.http.get<ICliente[]>(`${this.resourceUrl}/by-document/${doc}`, { params: options, observe: 'response' });
+  }
+
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }

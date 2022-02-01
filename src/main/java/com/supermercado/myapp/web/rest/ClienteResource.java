@@ -166,6 +166,20 @@ public class ClienteResource {
     }
 
     /**
+     * {@code GET  /clientes} : get all the coches.
+     *
+     * @param pageable the pagination information.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of coches in body.
+     */
+    @GetMapping("/clientes/by-document/{doc}")
+    public ResponseEntity<List<ClienteDTO>> getAllClientesPorDocumento(@PathVariable String doc, Pageable pageable) {
+        log.debug("REST request to get a page of Coches");
+        Page<ClienteDTO> page = clienteService.clientesPorDocumento(doc, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
      * {@code DELETE  /clientes/:id} : delete the "id" cliente.
      *
      * @param id the id of the clienteDTO to delete.

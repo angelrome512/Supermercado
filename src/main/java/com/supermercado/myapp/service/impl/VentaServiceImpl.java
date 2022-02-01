@@ -35,6 +35,13 @@ public class VentaServiceImpl implements VentaService {
     public VentaDTO save(VentaDTO ventaDTO) {
         log.debug("Request to save Venta : {}", ventaDTO);
         Venta venta = ventaMapper.toEntity(ventaDTO);
+
+        if (null == findAllByPrecioOrderByNumerofacturaDesc()) {
+            venta.setNumeroFactura(4);
+        } else {
+            venta.setNumeroFactura(7);
+        }
+
         venta = ventaRepository.save(venta);
         return ventaMapper.toDto(venta);
     }
@@ -72,5 +79,11 @@ public class VentaServiceImpl implements VentaService {
     public void delete(Long id) {
         log.debug("Request to delete Venta : {}", id);
         ventaRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<VentaDTO> findAllByPrecioOrderByNumerofacturaDesc() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

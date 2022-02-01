@@ -9,6 +9,7 @@ import { IVenta } from '../venta.model';
 import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/config/pagination.constants';
 import { VentaService } from '../service/venta.service';
 import { VentaDeleteDialogComponent } from '../delete/venta-delete-dialog.component';
+import { ClienteService } from 'app/entities/cliente/service/cliente.service';
 
 @Component({
   selector: 'jhi-venta',
@@ -28,7 +29,8 @@ export class VentaComponent implements OnInit {
     protected ventaService: VentaService,
     protected activatedRoute: ActivatedRoute,
     protected router: Router,
-    protected modalService: NgbModal
+    protected modalService: NgbModal,
+    protected clienteService: ClienteService
   ) {}
 
   loadPage(page?: number, dontNavigate?: boolean): void {

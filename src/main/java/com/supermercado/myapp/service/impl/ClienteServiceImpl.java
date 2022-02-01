@@ -73,4 +73,10 @@ public class ClienteServiceImpl implements ClienteService {
         log.debug("Request to delete Cliente : {}", id);
         clienteRepository.deleteById(id);
     }
+
+    @Override
+    public Page<ClienteDTO> clientesPorDocumento(String doc, Pageable pageable) {
+        log.debug("Request to get all Clientes only showing documento");
+        return clienteRepository.clientesPorDocumento(doc, pageable).map(clienteMapper::toDto);
+    }
 }

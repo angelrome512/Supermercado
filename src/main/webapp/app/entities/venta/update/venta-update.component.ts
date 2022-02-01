@@ -22,6 +22,8 @@ import { TipoPago } from 'app/entities/enumerations/tipo-pago.model';
 export class VentaUpdateComponent implements OnInit {
   isSaving = false;
   tipoPagoValues = Object.keys(TipoPago);
+  docString = '';
+  docResult = '';
 
   clientesSharedCollection: ICliente[] = [];
   empleadosSharedCollection: IEmpleado[] = [];
@@ -81,6 +83,26 @@ export class VentaUpdateComponent implements OnInit {
     return item.id!;
   }
 
+  clientesPorDocumento(): void {
+    this.clienteService
+      .AllClientePorDocumento(this.docString)
+      .pipe(map((res: HttpResponse<ICliente[]>) => res.body ?? []))
+      .pipe(
+        map((clientes: ICliente[]) => this.clienteService.addClienteToCollectionIfMissing(clientes, this.editForm.get('cliente')!.value))
+      )
+      .subscribe((clientes: ICliente[]) => (this.clientesSharedCollection = clientes));
+  }
+
+  searchClientes(): void {
+    if (this.docString !== '') {
+      this.clienteService.AllClientePorDocumento(this.docString).subscribe({
+        next: (res: HttpResponse<ICliente[]>) => {
+          this.productosSharedCollection = res.body ?? [];
+        },
+      });
+    }
+  }
+
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IVenta>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
       next: () => this.onSaveSuccess(),
@@ -118,13 +140,13 @@ export class VentaUpdateComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
-    this.clienteService
-      .query()
-      .pipe(map((res: HttpResponse<ICliente[]>) => res.body ?? []))
-      .pipe(
-        map((clientes: ICliente[]) => this.clienteService.addClienteToCollectionIfMissing(clientes, this.editForm.get('cliente')!.value))
-      )
-      .subscribe((clientes: ICliente[]) => (this.clientesSharedCollection = clientes));
+    // this.clienteService
+    //   .query(this.docString)
+    //   .pipe(map((res: HttpResponse<ICliente[]>) => res.body ?? []))
+    //   .pipe(
+    //     map((clientes: ICliente[]) => this.clienteService.addClienteToCollectionIfMissing(clientes, this.editForm.get('cliente')!.value))
+    //   )
+    //   .subscribe((clientes: ICliente[]) => (this.clientesSharedCollection = clientes));
 
     this.empleadoService
       .query()

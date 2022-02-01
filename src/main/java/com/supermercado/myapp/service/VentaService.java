@@ -41,6 +41,8 @@ public interface VentaService {
      */
     Optional<VentaDTO> findOne(Long id);
 
+    Optional<VentaDTO> findAllByPrecioOrderByNumerofacturaDesc();
+
     /**
      * Delete the "id" venta.
      *
