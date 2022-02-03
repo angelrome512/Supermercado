@@ -14,10 +14,12 @@ import { EmpleadoService } from 'app/entities/empleado/service/empleado.service'
 import { IProducto } from 'app/entities/producto/producto.model';
 import { ProductoService } from 'app/entities/producto/service/producto.service';
 import { TipoPago } from 'app/entities/enumerations/tipo-pago.model';
+import dayjs from 'dayjs/esm';
 
 @Component({
   selector: 'jhi-venta-update',
   templateUrl: './venta-update.component.html',
+  styleUrls: ['./ventaUp.component.scss'],
 })
 export class VentaUpdateComponent implements OnInit {
   isSaving = false;
@@ -29,13 +31,14 @@ export class VentaUpdateComponent implements OnInit {
 
   editForm = this.fb.group({
     id: [],
-    numeroFactura: [null, [Validators.max(8)]],
-    fecha: [],
+    numeroFactura: [null, [Validators.max(99999999)]],
+    fecha: [{ value: '', disabled: true }],
     total: [],
     tipoPago: [null, [Validators.required]],
     cliente: [],
     empleado: [],
     producto: [],
+    anular: [],
   });
 
   constructor(
@@ -49,8 +52,11 @@ export class VentaUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ venta }) => {
+      if (venta.id === undefined) {
+        const today = dayjs().startOf('day');
+        venta.fecha = today;
+      }
       this.updateForm(venta);
-
       this.loadRelationshipsOptions();
     });
   }
@@ -110,6 +116,7 @@ export class VentaUpdateComponent implements OnInit {
       cliente: venta.cliente,
       empleado: venta.empleado,
       producto: venta.producto,
+      anular: venta.anular,
     });
 
     this.clientesSharedCollection = this.clienteService.addClienteToCollectionIfMissing(this.clientesSharedCollection, venta.cliente);
@@ -158,6 +165,7 @@ export class VentaUpdateComponent implements OnInit {
       cliente: this.editForm.get(['cliente'])!.value,
       empleado: this.editForm.get(['empleado'])!.value,
       producto: this.editForm.get(['producto'])!.value,
+      anular: this.editForm.get(['anular'])!.value,
     };
   }
 }
